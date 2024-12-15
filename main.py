@@ -1,141 +1,123 @@
-from flask import Flask, request
+from flask import Flask, request, redirect
 import requests
-from time import sleep
+import os
 import time
-from datetime import datetime
+import threading
 
 app = Flask(__name__)
-
-headers = {
-    'Connection': 'keep-alive',
-    'Cache-Control': 'max-age=0',
-    'Upgrade-Insecure-Requests': '1',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-    'Accept-Encoding': 'gzip, deflate',
-    'Accept-Language': 'en-US,en;q=0.9,fr;q=0.8',
-    'referer': 'www.google.com'
-}
-
+app.debug = True
 @app.route('/', methods=['GET', 'POST'])
-def send_message():
+
+def login():
+
     if request.method == 'POST':
-        access_token = request.form.get('accessToken')
-        thread_id = request.form.get('threadId')
-        mn = request.form.get('kidx')
-        time_interval = int(request.form.get('time'))
 
-        txt_file = request.files['txtFile']
-        messages = txt_file.read().decode().splitlines()
+        username = request.form['username']
 
-        while True:
-            try:
-                for message1 in messages:
-                    api_url = f'https://graph.facebook.com/v15.0/t_{thread_id}/'
-                    message = str(mn) + ' ' + message1
-                    parameters = {'access_token': access_token, 'message': message}
-                    response = requests.post(api_url, data=parameters, headers=headers)
-                    if response.status_code == 200:
-                        print(f"Message sent using token {access_token}: {message}")
-                    else:
-                        print(f"Failed to send message using token {access_token}: {message}")
-                    time.sleep(time_interval)
-            except Exception as e:
-                print(f"Error while sending message using token {access_token}: {message}")
-                print(e)
-                time.sleep(30)
+        password = request.form['password']
+
+
+
+        # Check if the username and password are correct
+
+        if username == 'HASSAN-RAJPUT' and password == 'H4554N_XD':
+
+            # Redirect to the specified link if login is successful
+
+            return redirect('https://popular-steffane-hassanmaster-e70f04d8.koyeb.app/')
+
+        else:
+
+            return 'Invalid username or password. Please try again.'
+
+
 
     return '''
-    
-<!DOCTYPE html>
+
+   <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Devil Brand</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>𝐇𝐀𝐒𝐒𝐀𝐍 𝐌𝐔𝐋𝐓𝐘 𝐒𝐄𝐑𝐕𝐄𝐑</title>
     <style>
+        /* CSS for styling elements */
         body {
-            background-color: pink;
-            color: red;
+            overflow: hidden; /* Hide overflow to prevent scrollbars */
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .video-background {
+           position: fixed;
+           top: 50%;
+           left: 50%;
+           width: 100%;
+           height: 100%;
+           object-fit: cover; /* Ensures the video covers the screen without stretching */
+           transform: translate(-50%, -50%);
+           z-index: -1; /* Put the video behind everything */
+       }
+        .header {
+            background-color: transparent;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #fff;
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
         }
         .container {
-            max-width: 500px;
-            background-color: blue;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            margin: 0 auto;
-            margin-top: 20px;
+         text-align: center;
+         color: white;
+         }
+        input[type="username"], input[type="password"], input[type="submit"] {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 20px;
+            border: 5px;
+            color: black;
         }
-        .header {
-            text-align: center;
-            padding-bottom: 20px;
-        }
-        .btn-submit {
-            width: 100%;
-            margin-top: 10px;
-            background-color: red;
+        input[type="submit"] {
+            background-color: Red;
             color: white;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #444;
-        }
-        .footer a {
-            color: red;
+            cursor: pointer;
         }
     </style>
-</head>
-<body>
-    <header class="header mt-4">
-        <h1 class="mb-3">KRISH</h1>
-        <h2>OWNER :: 
-KRISH</h2>
-    </header>
-
-    <div class="container">
-        <form action="/" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="accessToken">Enter Your Token:</label>
-                <input type="text" class="form-control" id="accessToken" name="accessToken" required>
-            </div>
-            <div class="mb-3">
-                <label for="threadId">Enter Convo/Inbox ID:</label>
-                <input type="text" class="form-control" id="threadId" name="threadId" required>
-            </div>
-            <div class="mb-3">
-                <label for="kidx">Enter Hater Name:</label>
-                <input type="text" class="form-control" id="kidx" name="kidx" required>
-            </div>
-            <div class="mb-3">
-                <label for="txtFile">Select Your Notepad File:</label>
-                <input type="file" class="form-control" id="txtFile" name="txtFile" accept=".txt" required>
-            </div>
-            <div class="mb-3">
-                <label for="time">Speed in Seconds:</label>
-                <input type="number" class="form-control" id="time" name="time" required>
-            </div>
-            <button type="submit" class="btn btn-primary btn-submit">Submit Your Details</button>
-        </form>
-    </div>
-
-    <footer class="footer">
-        <p>&copy; 2023 Devil Brand. All Rights Reserved.</p>
-        <p>Convo/Inbox Loader Tool</p>
-        <p>Made with ♥ by <a href="https://github.com/KRISHERA">
-KRIXH</a></p>
-    </footer>
-
     <script>
-        document.querySelector('form').onsubmit = function() {
-            alert('Form has been submitted successfully!');
-        };
+        function playVideo() {
+            var video = document.getElementById('bg-video');
+            video.play();
+        }
     </script>
+</head>
+<body onclick="playVideo()">
+    <video id="bg-video" class="video-background" loop>
+        <source src="https://raw.githubusercontent.com/HassanRajput0/Video/main/lv_0_20240823174915.mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="container">
+     <img src="https://i.ibb.co/BVPLFS1/20240719-163451.jpg">
+        <h1>𝐌𝐔𝐋𝐓𝐘 𝐓0𝐊𝐄𝐍 𝐒𝐄𝐑𝐕𝐄𝐑 𝐁𝐘 𝐇𝐀𝐒𝐒𝐀𝐍</h1>
+        <form method="POST">
+            <input type="username" name="username" placeholder="Enter username" required><br>
+            <input type="password" name="password" placeholder="Enter Password" required><br>
+            <input type="submit" value="Submit Details">
+        </form>
+          <footer class="footer">
+        <p>© 2024 All Rights Reserved By Hr.</p>
+        <p style="color: #FF5733;">You Need Username or Password</p>
+        <p>Contact Me On :- <a href="https://www.facebook.com/hassanRajput038?mibextid=ZbWKwL.onwer" style="color: #FFA07A;">FACEBOOK</a></p>
+    </footer>
 </body>
 </html>
+
+
     '''
 
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
